@@ -15,8 +15,11 @@ void Display::PrintGrid(const Grid& grid,
     GridNode* agent,
     const std::vector<GridNode*>& visited)
 {
-    for (int y = 0; y < Grid::HEIGHT; y++) {
-        for (int x = 0; x < Grid::WIDTH; x++) {
+    int width = grid.GetWidth();
+    int height = grid.GetHeight();
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
             GridNode* n = grid.GetNode(x, y);
             char c;
             if (n == agent && n != start && n != target)
@@ -33,7 +36,7 @@ void Display::PrintGrid(const Grid& grid,
                 c = '.';
 
             std::cout << c;
-            if (x < Grid::WIDTH - 1) std::cout << ' ';
+            if (x < width - 1) std::cout << ' ';
         }
         std::cout << '\n';
     }
