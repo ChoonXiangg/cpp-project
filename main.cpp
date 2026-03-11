@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <conio.h>
+#include <windows.h>
 #include "GridNode.h"
 #include "Pathfinding.h"
 
@@ -17,7 +19,8 @@ int layout[HEIGHT][WIDTH] = {
 
 void printGrid(GridNode* nodes[HEIGHT][WIDTH],
     GridNode* start, GridNode* target,
-    GridNode* agent)
+    GridNode* agent,
+    const std::vector<GridNode*>& visited)
 {
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
@@ -31,6 +34,8 @@ void printGrid(GridNode* nodes[HEIGHT][WIDTH],
                 c = 'E';
             else if (!n->IsWalkable())
                 c = 'X';
+            else if (std::find(visited.begin(), visited.end(), n) != visited.end())
+                c = '*';
             else
                 c = '.';
 
@@ -67,31 +72,56 @@ int main() {
     GridNode* start = nodes[0][0];
     GridNode* target = nodes[4][4];
 
-    std::vector<NodeBase*> path = Pathfinding::FindPath(start, target);
+    // FindPath works with NodeBase* (generic), so we cast the result back to GridNode* since we know the concrete type
+    std::vector<NodeBase*> basePath = Pathfinding::FindPath(start, target);
 
-    if (path.empty()) {
+    if (basePath.empty()) {
         std::cout << "No path found.\n";
         return 0;
+    }
+
+    // Cast once at the boundary, then use GridNode* everywhere
+    std::vector<GridNode*> path;
+    path.reserve(basePath.size());
+    for (NodeBase* node : basePath) {
+        path.push_back(static_cast<GridNode*>(node));
     }
 
     // FindPath returns path in reverse (target -> start), so reverse it
     std::reverse(path.begin(), path.end());
     // path[0] is now the first step after start, path.back() is target
 
-    std::cout << "S: Start  E: End  .: Free  X: Wall  @: Agent\n";
-    std::cout << "Press Enter to step...\n\n";
+    std::cout << "S: Start  E: End  .: Free  X: Wall  @: Agent  *: Path\n";
+    std::cout << "Press any key to take a step\n\n";
 
     // Show initial state
-    printGrid(nodes, start, target, start);
+    std::vector<GridNode*> visited;
+    printGrid(nodes, start, target, start, visited);
 
     for (int i = 0; i < (int)path.size(); i++) {
-        std::cin.get(); // wait for Enter
-        GridNode* agent = static_cast<GridNode*>(path[i]);
-        std::cout << '\n';
-        printGrid(nodes, start, target, agent);
+        // Store the return value of _getch to fix C6031 warning
+        int ch = _getch(); // wait for any keypress, no echo
+        (void)ch; // explicitly ignore the value
+
+        GridNode* agent = path[i];
+
+        // Record the previous position as visited
+        if (i == 0)
+            visited.push_back(start);
+        else
+            visited.push_back(path[i - 1]);
+
+        // Move cursor up HEIGHT lines to overwrite the previous grid
+        std::cout << "\033[" << HEIGHT << "A";
+        printGrid(nodes, start, target, agent, visited);
     }
 
-    std::cout << "\nReached the end!\n";
+    // Print the full path: start + path nodes
+    std::cout << "\nPath: (" << start->x_ << ", " << start->y_ << ")";
+    for (GridNode* node : path) {
+        std::cout << ", (" << node->x_ << ", " << node->y_ << ")";
+    }
+    std::cout << "\nPath length: " << path.size() << "\n";
 
     for (int y = 0; y < HEIGHT; y++)
         for (int x = 0; x < WIDTH; x++)
