@@ -123,9 +123,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Display.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Display.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="GridNode.h" />
     <ClInclude Include="NodeBase.h" />
     <ClInclude Include="Pathfinding.h" />
