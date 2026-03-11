@@ -5,17 +5,15 @@
 
 class Grid {
 public:
-    Grid(int width, int height);
+    static const int WIDTH = 5;
+    static const int HEIGHT = 5;
+
+    Grid(int layout[HEIGHT][WIDTH]);
     ~Grid();
 
-    int GetWidth() const { return width_; }
-    int GetHeight() const { return height_; }
-    GridNode* GetNode(int x, int y) const { return nodes_[y * width_ + x]; }
-    void SetWall(int x, int y);
+    GridNode* GetNode(int x, int y) const { return nodes_[y][x]; }
 
 private:
-    int width_;
-    int height_;
-    std::vector<GridNode*> nodes_;
+    GridNode* nodes_[HEIGHT][WIDTH];
     void SetupNeighbors();
 };

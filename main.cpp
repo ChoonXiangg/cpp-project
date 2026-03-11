@@ -7,40 +7,22 @@
 #include "Display.h"
 #include "Pathfinding.h"
 
+int layout[Grid::HEIGHT][Grid::WIDTH] = {
+    { 0, 0, 0, 0, 1 },
+    { 0, 0, 0, 0, 0 },
+    { 0, 0, 1, 0, 0 },
+    { 0, 0, 0, 0, 0 },
+    { 1, 0, 0, 0, 0 },
+};
+
 int main() {
     Display::EnableAnsiEscapes();
 
-    // 1. Grid dimensions
-    int width, height;
-    std::cout << "Enter grid height and width: ";
-    std::cin >> height >> width;
+    Grid grid(layout);
+    GridNode* start = grid.GetNode(0, 0);
+    GridNode* target = grid.GetNode(4, 4);
 
-    Grid grid(width, height);
-
-    // 2. Start and end positions
-    int sx, sy, ex, ey;
-    std::cout << "Enter start position (x, y): ";
-    std::cin >> sx >> sy;
-    std::cout << "Enter end position (x, y): ";
-    std::cin >> ex >> ey;
-
-    GridNode* start = grid.GetNode(sx, sy);
-    GridNode* target = grid.GetNode(ex, ey);
-
-    // 3. Number of walls
-    int wallCount;
-    std::cout << "Enter number of walls: ";
-    std::cin >> wallCount;
-
-    // 4. Wall positions
-    for (int i = 0; i < wallCount; i++) {
-        int wx, wy;
-        std::cout << "Enter wall " << (i + 1) << " position (x, y): ";
-        std::cin >> wx >> wy;
-        grid.SetWall(wx, wy);
-    }
-
-    // Find path
+    // FindPath works with NodeBase* (generic), so we cast the result back to GridNode*
     std::vector<NodeBase*> basePath = Pathfinding::FindPath(start, target);
 
     if (basePath.empty()) {
@@ -48,14 +30,17 @@ int main() {
         return 0;
     }
 
+    // Cast once at the boundary, then use GridNode* everywhere
     std::vector<GridNode*> path;
     path.reserve(basePath.size());
     for (NodeBase* node : basePath) {
         path.push_back(static_cast<GridNode*>(node));
     }
+
+    // FindPath returns path in reverse (target -> start), so reverse it
     std::reverse(path.begin(), path.end());
 
-    std::cout << "\nS: Start  E: End  .: Free  X: Wall  @: Agent  *: Path\n";
+    std::cout << "S: Start  E: End  .: Free  X: Wall  @: Agent  *: Path\n";
     std::cout << "Press any key to take a step\n\n";
 
     // Show initial state
@@ -73,11 +58,11 @@ int main() {
         else
             visited.push_back(path[i - 1]);
 
-        Display::MoveCursorUp(grid.GetHeight());
+        Display::MoveCursorUp(Grid::HEIGHT);
         Display::PrintGrid(grid, start, target, agent, visited);
     }
 
-    // Print the full path
+    // Print the full path: start + path nodes
     std::cout << "\nPath: (" << start->x_ << ", " << start->y_ << ")";
     for (GridNode* node : path) {
         std::cout << ", (" << node->x_ << ", " << node->y_ << ")";
