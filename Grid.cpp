@@ -1,17 +1,12 @@
 #include "Grid.h"
 
 Grid::Grid(int width, int height) : width_(width), height_(height) {
-    nodes_.resize(width * height);
+    nodes_.reserve(width * height);
     for (int y = 0; y < height_; y++)
         for (int x = 0; x < width_; x++)
-            nodes_[y * width_ + x] = new GridNode(x, y);
+            nodes_.push_back(std::make_unique<GridNode>(x, y));
 
     SetupNeighbors();
-}
-
-Grid::~Grid() {
-    for (GridNode* node : nodes_)
-        delete node;
 }
 
 void Grid::SetWall(int x, int y) {
