@@ -41,5 +41,8 @@
     <ClInclude Include="Display.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HexNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

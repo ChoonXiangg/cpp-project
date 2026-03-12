@@ -131,6 +131,7 @@
     <ClInclude Include="Display.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="GridNode.h" />
+    <ClInclude Include="HexNode.h" />
     <ClInclude Include="NodeBase.h" />
     <ClInclude Include="Pathfinding.h" />
   </ItemGroup>
