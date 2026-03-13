@@ -3,10 +3,11 @@
 #include <vector>
 #include <memory>
 #include "HexNode.h"
+#include "Heuristic.h"
 
 class HexGrid {
 public:
-    HexGrid(int width, int height);
+    HexGrid(int width, int height, Heuristic heuristic = Heuristic::Manhattan);
 
     int GetWidth() const { return width_; }
     int GetHeight() const { return height_; }

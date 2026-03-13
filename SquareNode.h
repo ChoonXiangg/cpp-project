@@ -10,7 +10,14 @@ public:
     SquareNode(int x, int y) : x_(x), y_(y) {}
 
     double GetDistance(NodeBase* other) override {
-        SquareNode* o = static_cast<SquareNode*>(other);
-        return std::abs(x_ - o->x_) + std::abs(y_ - o->y_);
+        auto o = static_cast<SquareNode*>(other);
+        int dx = x_ - o->x_;
+        int dy = y_ - o->y_;
+
+        if (GetHeuristic() == Heuristic::Euclidean)
+            return std::sqrt(dx * dx + dy * dy);
+
+        // Manhattan (default)
+        return std::abs(dx) + std::abs(dy);
     }
 };

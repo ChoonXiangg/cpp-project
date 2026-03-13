@@ -3,10 +3,11 @@
 #include <vector>
 #include <memory>
 #include "SquareNode.h"
+#include "Heuristic.h"
 
 class SquareGrid {
 public:
-    SquareGrid(int width, int height);
+    SquareGrid(int width, int height, Heuristic heuristic = Heuristic::Manhattan);
 
     int GetWidth() const { return width_; }
     int GetHeight() const { return height_; }

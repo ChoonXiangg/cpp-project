@@ -10,12 +10,12 @@
 #include "Input.h"
 #include "runHexGrid.h"
 
-void runHexGrid(int width, int height) {
-    HexGrid grid(width, height);
+void runHexGrid(int width, int height, Heuristic heuristic) {
+    HexGrid grid(width, height, heuristic);
 
     int sx, sy, ex, ey;
-    Input::ReadPosition("Start position (x, y): ", sx, sy, width, height);
-    Input::ReadPosition("End position (x, y): ", ex, ey, width, height);
+    Input::ReadPosition("Start position (x y): ", sx, sy, width, height);
+    Input::ReadPosition("End position (x y): ", ex, ey, width, height);
 
     auto start = grid.GetNode(sx, sy);
     auto target = grid.GetNode(ex, ey);
@@ -23,10 +23,10 @@ void runHexGrid(int width, int height) {
     int maxWalls = width * height - 2;
     auto wallCount = Input::ReadInt("Number of walls: ",
         [maxWalls](int v) { return v >= 0 && v <= maxWalls; },
-        "Number of walls must be between 0 and " + std::to_string(maxWalls) + ".");
+        "Must be between 0 and " + std::to_string(maxWalls) + ".");
 
     if (wallCount > 0) {
-        auto choice = Input::ReadInt("Wall position (1: Manual, 2: Random): ",
+        auto choice = Input::ReadInt("Wall placement (1: Manual, 2: Random): ",
             [](int v) { return v == 1 || v == 2; },
             "Please enter 1 or 2.");
 
@@ -34,13 +34,13 @@ void runHexGrid(int width, int height) {
             for (int i = 0; i < wallCount; i++) {
                 int wx, wy;
                 while (true) {
-                    Input::ReadPosition("Wall " + std::to_string(i + 1) + " position (x, y): ",
+                    Input::ReadPosition("Wall " + std::to_string(i + 1) + " position (x y): ",
                         wx, wy, width, height);
                     auto node = grid.GetNode(wx, wy);
                     if (node == start || node == target)
-                        std::cout << "Wall must not be on start or end.\n";
+                        std::cout << "Cannot place a wall on start or end.\n";
                     else if (!node->IsWalkable())
-                        std::cout << "Wall must not stack.\n";
+                        std::cout << "Wall already exists at (" << wx << ", " << wy << ").\n";
                     else
                         break;
                 }

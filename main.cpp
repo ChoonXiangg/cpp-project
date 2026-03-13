@@ -3,6 +3,7 @@
 #include <ctime>
 #include "Display.h"
 #include "Input.h"
+#include "Heuristic.h"
 #include "runSquareGrid.h"
 #include "runHexGrid.h"
 
@@ -22,10 +23,16 @@ int main() {
         [](int v) { return v >= 2; },
         "Height must be at least 2.");
 
+    auto heuristicChoice = Input::ReadInt("Heuristic (1: Manhattan, 2: Euclidean): ",
+        [](int v) { return v == 1 || v == 2; },
+        "Please enter 1 or 2.");
+
+    auto heuristic = (heuristicChoice == 1) ? Heuristic::Manhattan : Heuristic::Euclidean;
+
     if (gridType == 1)
-        runSquareGrid(width, height);
+        runSquareGrid(width, height, heuristic);
     else
-        runHexGrid(width, height);
+        runHexGrid(width, height, heuristic);
 
     return 0;
 }

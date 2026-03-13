@@ -1,10 +1,14 @@
 #include "HexGrid.h"
 
-HexGrid::HexGrid(int width, int height) : width_(width), height_(height) {
+HexGrid::HexGrid(int width, int height, Heuristic heuristic)
+    : width_(width), height_(height) {
     nodes_.reserve(width * height);
     for (int y = 0; y < height_; y++)
-        for (int x = 0; x < width_; x++)
-            nodes_.push_back(std::make_unique<HexNode>(x, y));
+        for (int x = 0; x < width_; x++) {
+            auto node = std::make_unique<HexNode>(x, y);
+            node->SetHeuristic(heuristic);
+            nodes_.push_back(std::move(node));
+        }
 
     SetupNeighbors();
 }
@@ -14,9 +18,6 @@ void HexGrid::SetWall(int x, int y) {
 }
 
 void HexGrid::SetupNeighbors() {
-    // Odd-r offset: odd rows are shifted right
-    // Even row neighbors:  (-1,0) (+1,0) (0,-1) (-1,-1) (0,+1) (-1,+1)
-    // Odd row neighbors:   (-1,0) (+1,0) (0,-1) (+1,-1) (0,+1) (+1,+1)
     int evenDx[] = { -1, 1,  0, -1,  0, -1 };
     int evenDy[] = { 0, 0, -1, -1,  1,  1 };
     int oddDx[] = { -1, 1,  0,  1,  0,  1 };

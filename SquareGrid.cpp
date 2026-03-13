@@ -1,10 +1,14 @@
 #include "SquareGrid.h"
 
-SquareGrid::SquareGrid(int width, int height) : width_(width), height_(height) {
+SquareGrid::SquareGrid(int width, int height, Heuristic heuristic)
+    : width_(width), height_(height) {
     nodes_.reserve(width * height);
     for (int y = 0; y < height_; y++)
-        for (int x = 0; x < width_; x++)
-            nodes_.push_back(std::make_unique<SquareNode>(x, y));
+        for (int x = 0; x < width_; x++) {
+            auto node = std::make_unique<SquareNode>(x, y);
+            node->SetHeuristic(heuristic);
+            nodes_.push_back(std::move(node));
+        }
 
     SetupNeighbors();
 }
