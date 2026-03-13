@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include "Display.h"
+#include "Input.h"
 #include "runSquareGrid.h"
 #include "runHexGrid.h"
 
@@ -9,13 +10,17 @@ int main() {
     Display::EnableAnsiEscapes();
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 
-    int gridType;
-    std::cout << "Grid type (1: Square, 2: Hex): ";
-    std::cin >> gridType;
+    auto gridType = Input::ReadInt("Grid type (1: Square, 2: Hex): ",
+        [](int v) { return v == 1 || v == 2; },
+        "Please enter 1 or 2.");
 
-    int width, height;
-    std::cout << "Grid width and height: ";
-    std::cin >> width >> height;
+    auto width = Input::ReadInt("Grid width: ",
+        [](int v) { return v >= 2; },
+        "Width must be at least 2.");
+
+    auto height = Input::ReadInt("Grid height: ",
+        [](int v) { return v >= 2; },
+        "Height must be at least 2.");
 
     if (gridType == 1)
         runSquareGrid(width, height);

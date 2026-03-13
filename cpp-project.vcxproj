@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="HexGrid.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="RunHexGrid.cpp" />
     <ClCompile Include="RunSquareGrid.cpp" />
     <ClCompile Include="SquareGrid.cpp" />
@@ -133,6 +134,7 @@
   <ItemGroup>
     <ClInclude Include="Display.h" />
     <ClInclude Include="HexGrid.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="RunHexGrid.h" />
     <ClInclude Include="RunSquareGrid.h" />
     <ClInclude Include="SquareGrid.h" />

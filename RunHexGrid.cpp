@@ -7,46 +7,57 @@
 #include "HexNode.h"
 #include "Display.h"
 #include "Pathfinding.h"
+#include "Input.h"
 #include "runHexGrid.h"
 
 void runHexGrid(int width, int height) {
     HexGrid grid(width, height);
 
     int sx, sy, ex, ey;
-    std::cout << "Start position (x, y): ";
-    std::cin >> sx >> sy;
-    std::cout << "End position (x, y): ";
-    std::cin >> ex >> ey;
+    Input::ReadPosition("Start position (x, y): ", sx, sy, width, height);
+    Input::ReadPosition("End position (x, y): ", ex, ey, width, height);
 
     auto start = grid.GetNode(sx, sy);
     auto target = grid.GetNode(ex, ey);
 
-    int wallCount;
-    std::cout << "Wall amount: ";
-    std::cin >> wallCount;
+    int maxWalls = width * height - 2;
+    auto wallCount = Input::ReadInt("Number of walls: ",
+        [maxWalls](int v) { return v >= 0 && v <= maxWalls; },
+        "Number of walls must be between 0 and " + std::to_string(maxWalls) + ".");
 
-    int choice;
-    std::cout << "Wall position (1: Manual, 2: Random): ";
-    std::cin >> choice;
+    if (wallCount > 0) {
+        auto choice = Input::ReadInt("Wall position (1: Manual, 2: Random): ",
+            [](int v) { return v == 1 || v == 2; },
+            "Please enter 1 or 2.");
 
-    if (choice == 1) {
-        for (int i = 0; i < wallCount; i++) {
-            int wx, wy;
-            std::cout << "Wall " << (i + 1) << " position (x, y): ";
-            std::cin >> wx >> wy;
-            grid.SetWall(wx, wy);
+        if (choice == 1) {
+            for (int i = 0; i < wallCount; i++) {
+                int wx, wy;
+                while (true) {
+                    Input::ReadPosition("Wall " + std::to_string(i + 1) + " position (x, y): ",
+                        wx, wy, width, height);
+                    auto node = grid.GetNode(wx, wy);
+                    if (node == start || node == target)
+                        std::cout << "Wall must not be on start or end.\n";
+                    else if (!node->IsWalkable())
+                        std::cout << "Wall must not stack.\n";
+                    else
+                        break;
+                }
+                grid.SetWall(wx, wy);
+            }
         }
-    }
-    else {
-        int placed = 0;
-        while (placed < wallCount) {
-            int wx = std::rand() % width;
-            int wy = std::rand() % height;
-            auto node = grid.GetNode(wx, wy);
-            if (node == start || node == target || !node->IsWalkable())
-                continue;
-            grid.SetWall(wx, wy);
-            placed++;
+        else {
+            int placed = 0;
+            while (placed < wallCount) {
+                int wx = std::rand() % width;
+                int wy = std::rand() % height;
+                auto node = grid.GetNode(wx, wy);
+                if (node == start || node == target || !node->IsWalkable())
+                    continue;
+                grid.SetWall(wx, wy);
+                placed++;
+            }
         }
     }
 
@@ -60,7 +71,6 @@ void runHexGrid(int width, int height) {
         return;
     }
 
-    // Transform NodeBase* to HexNode* using std::transform
     std::vector<HexNode*> path(basePath.size());
     std::transform(basePath.begin(), basePath.end(), path.begin(),
         [](NodeBase* node) { return static_cast<HexNode*>(node); });
