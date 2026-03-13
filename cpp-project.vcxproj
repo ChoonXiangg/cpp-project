@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Display.cpp" />
+    <ClCompile Include="HexGrid.cpp" />
     <ClCompile Include="SquareGrid.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
