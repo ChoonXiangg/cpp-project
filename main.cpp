@@ -18,7 +18,7 @@ int main() {
     std::cout << "Enter grid width and height: ";
     std::cin >> width >> height;
 
-    Grid grid(width, height);
+    SquareGrid grid(width, height);
 
     // 2. Start and end positions
     int sx, sy, ex, ey;
@@ -27,8 +27,8 @@ int main() {
     std::cout << "End position (x, y): ";
     std::cin >> ex >> ey;
 
-    GridNode* start = grid.GetNode(sx, sy);
-    GridNode* target = grid.GetNode(ex, ey);
+    SquareNode* start = grid.GetNode(sx, sy);
+    SquareNode* target = grid.GetNode(ex, ey);
 
     // 3. Number of walls
     int wallCount;
@@ -54,7 +54,7 @@ int main() {
             int wx = std::rand() % width;
             int wy = std::rand() % height;
 
-            GridNode* node = grid.GetNode(wx, wy);
+            SquareNode* node = grid.GetNode(wx, wy);
 
             // Don't place walls on start, target, or existing walls
             if (node == start || node == target || !node->IsWalkable())
@@ -70,16 +70,16 @@ int main() {
 
     if (basePath.empty()) {
         std::cout << "\n";
-        std::vector<GridNode*> empty;
+        std::vector<SquareNode*> empty;
         Display::PrintGrid(grid, start, target, start, empty);
         std::cout << "\nNo path found.\n";
         return 0;
     }
 
-    std::vector<GridNode*> path;
+    std::vector<SquareNode*> path;
     path.reserve(basePath.size());
     for (NodeBase* node : basePath) {
-        path.push_back(static_cast<GridNode*>(node));
+        path.push_back(static_cast<SquareNode*>(node));
     }
     std::reverse(path.begin(), path.end());
 
@@ -87,14 +87,14 @@ int main() {
     std::cout << "Press any key to take a step\n\n";
 
     // Show initial state
-    std::vector<GridNode*> visited;
+    std::vector<SquareNode*> visited;
     Display::PrintGrid(grid, start, target, start, visited);
 
     for (int i = 0; i < (int)path.size(); i++) {
         int ch = _getch();
         (void)ch;
 
-        GridNode* agent = path[i];
+        SquareNode* agent = path[i];
 
         if (i == 0)
             visited.push_back(start);
@@ -107,7 +107,7 @@ int main() {
 
     // Print the full path
     std::cout << "\nPath: (" << start->x_ << ", " << start->y_ << ")";
-    for (GridNode* node : path) {
+    for (SquareNode* node : path) {
         std::cout << ", (" << node->x_ << ", " << node->y_ << ")";
     }
     std::cout << "\nPath length: " << path.size() << "\n";

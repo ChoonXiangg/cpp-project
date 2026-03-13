@@ -23,8 +23,10 @@ public:
         int s2 = -q2 - r2;
 
         // Hex distance = max of absolute differences in cube coordinates
-        return static_cast<double>(
-            std::max({ std::abs(q1 - q2), std::abs(r1 - r2), std::abs(s1 - s2) })
-            );
+        // Parentheses around std::max prevent Windows max macro conflict
+        int dq = std::abs(q1 - q2);
+        int dr = std::abs(r1 - r2);
+        int ds = std::abs(s1 - s2);
+        return static_cast<double>((std::max)({ dq, dr, ds }));
     }
 };

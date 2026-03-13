@@ -9,10 +9,10 @@
 namespace Display {
     void EnableAnsiEscapes();
 
-    void PrintGrid(const Grid& grid,
-        GridNode* start, GridNode* target,
-        GridNode* agent,
-        const std::vector<GridNode*>& visited);
+    void PrintGrid(const SquareGrid& grid,
+        SquareNode* start, SquareNode* target,
+        SquareNode* agent,
+        const std::vector<SquareNode*>& visited);
 
     void PrintGrid(const HexGrid& grid,
         HexNode* start, HexNode* target,

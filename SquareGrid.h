@@ -4,18 +4,18 @@
 #include <memory>
 #include "SquareNode.h"
 
-class Grid {
+class SquareGrid {
 public:
-    Grid(int width, int height);
+    SquareGrid(int width, int height);
 
     int GetWidth() const { return width_; }
     int GetHeight() const { return height_; }
-    GridNode* GetNode(int x, int y) const { return nodes_[y * width_ + x].get(); }
+    SquareNode* GetNode(int x, int y) const { return nodes_[y * width_ + x].get(); }
     void SetWall(int x, int y);
 
 private:
     int width_;
     int height_;
-    std::vector<std::unique_ptr<GridNode>> nodes_;
+    std::vector<std::unique_ptr<SquareNode>> nodes_;
     void SetupNeighbors();
 };

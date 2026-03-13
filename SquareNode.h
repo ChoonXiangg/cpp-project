@@ -3,14 +3,14 @@
 #include <cmath>
 #include "NodeBase.h"
 
-class GridNode : public NodeBase {
+class SquareNode : public NodeBase {
 public:
     int x_, y_;
 
-    GridNode(int x, int y) : x_(x), y_(y) {}
+    SquareNode(int x, int y) : x_(x), y_(y) {}
 
     double GetDistance(NodeBase* other) override {
-        GridNode* o = static_cast<GridNode*>(other);
+        SquareNode* o = static_cast<SquareNode*>(other);
         return std::abs(x_ - o->x_) + std::abs(y_ - o->y_);
     }
 };

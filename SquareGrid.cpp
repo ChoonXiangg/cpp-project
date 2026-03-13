@@ -1,19 +1,19 @@
 #include "SquareGrid.h"
 
-Grid::Grid(int width, int height) : width_(width), height_(height) {
+SquareGrid::SquareGrid(int width, int height) : width_(width), height_(height) {
     nodes_.reserve(width * height);
     for (int y = 0; y < height_; y++)
         for (int x = 0; x < width_; x++)
-            nodes_.push_back(std::make_unique<GridNode>(x, y));
+            nodes_.push_back(std::make_unique<SquareNode>(x, y));
 
     SetupNeighbors();
 }
 
-void Grid::SetWall(int x, int y) {
+void SquareGrid::SetWall(int x, int y) {
     GetNode(x, y)->SetWalkable(false);
 }
 
-void Grid::SetupNeighbors() {
+void SquareGrid::SetupNeighbors() {
     int dx[] = { 0, 0, -1, 1 };
     int dy[] = { -1, 1, 0, 0 };
 

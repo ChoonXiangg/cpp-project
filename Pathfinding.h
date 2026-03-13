@@ -40,7 +40,7 @@ public:
 
                 bool inSearch = std::find(toSearch.begin(), toSearch.end(), neighbor) != toSearch.end();
 
-                float costToNeighbor = current->GetG() + current->GetDistance(neighbor);
+                double costToNeighbor = current->GetG() + current->GetDistance(neighbor);
 
                 if (!inSearch || costToNeighbor < neighbor->GetG()) {
                     neighbor->SetG(costToNeighbor);
