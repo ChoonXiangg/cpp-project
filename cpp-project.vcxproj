@@ -125,12 +125,16 @@
   <ItemGroup>
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="HexGrid.cpp" />
+    <ClCompile Include="RunHexGrid.cpp" />
+    <ClCompile Include="RunSquareGrid.cpp" />
     <ClCompile Include="SquareGrid.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Display.h" />
     <ClInclude Include="HexGrid.h" />
+    <ClInclude Include="RunHexGrid.h" />
+    <ClInclude Include="RunSquareGrid.h" />
     <ClInclude Include="SquareGrid.h" />
     <ClInclude Include="SquareNode.h" />
     <ClInclude Include="HexNode.h" />
