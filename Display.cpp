@@ -15,12 +15,12 @@ void Display::PrintGrid(const SquareGrid& grid,
     SquareNode* agent,
     const std::vector<SquareNode*>& visited)
 {
-    int width = grid.GetWidth();
-    int height = grid.GetHeight();
+    auto width = grid.GetWidth();
+    auto height = grid.GetHeight();
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            SquareNode* n = grid.GetNode(x, y);
+            auto n = grid.GetNode(x, y);
             char c;
             if (n == agent && n != start && n != target)
                 c = '@';
@@ -30,7 +30,8 @@ void Display::PrintGrid(const SquareGrid& grid,
                 c = 'E';
             else if (!n->IsWalkable())
                 c = 'X';
-            else if (std::find(visited.begin(), visited.end(), n) != visited.end())
+            else if (std::any_of(visited.begin(), visited.end(),
+                [n](SquareNode* v) { return v == n; }))
                 c = '*';
             else
                 c = '.';
@@ -47,8 +48,8 @@ void Display::PrintGrid(const HexGrid& grid,
     HexNode* agent,
     const std::vector<HexNode*>& visited)
 {
-    int width = grid.GetWidth();
-    int height = grid.GetHeight();
+    auto width = grid.GetWidth();
+    auto height = grid.GetHeight();
 
     for (int y = 0; y < height; y++) {
         // Indent odd rows by one space for the staggered hex look
@@ -56,7 +57,7 @@ void Display::PrintGrid(const HexGrid& grid,
             std::cout << ' ';
 
         for (int x = 0; x < width; x++) {
-            HexNode* n = grid.GetNode(x, y);
+            auto n = grid.GetNode(x, y);
             char c;
             if (n == agent && n != start && n != target)
                 c = '@';
@@ -66,7 +67,8 @@ void Display::PrintGrid(const HexGrid& grid,
                 c = 'E';
             else if (!n->IsWalkable())
                 c = 'X';
-            else if (std::find(visited.begin(), visited.end(), n) != visited.end())
+            else if (std::any_of(visited.begin(), visited.end(),
+                [n](HexNode* v) { return v == n; }))
                 c = '*';
             else
                 c = '.';

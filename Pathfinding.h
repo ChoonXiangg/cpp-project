@@ -19,6 +19,12 @@ public:
         std::vector<NodeBase*> closed;
         std::vector<NodeBase*> discovered;
 
+        // Lambda to check if a node is in a list
+        auto contains = [](const std::vector<NodeBase*>& list, NodeBase* node) {
+            return std::any_of(list.begin(), list.end(),
+                [node](NodeBase* n) { return n == node; });
+            };
+
         startNode->SetG(0);
         startNode->SetH(startNode->GetDistance(targetNode));
         openSet.push(startNode);
@@ -29,7 +35,7 @@ public:
             openSet.pop();
 
             // Skip stale entries (node was re-pushed with a better G)
-            if (std::find(closed.begin(), closed.end(), current) != closed.end())
+            if (contains(closed, current))
                 continue;
 
             closed.push_back(current);
@@ -45,13 +51,11 @@ public:
             }
 
             for (auto neighbor : current->GetNeighbors()) {
-                if (!neighbor->IsWalkable() ||
-                    std::find(closed.begin(), closed.end(), neighbor) != closed.end()) {
+                if (!neighbor->IsWalkable() || contains(closed, neighbor))
                     continue;
-                }
 
                 double costToNeighbor = current->GetG() + current->GetDistance(neighbor);
-                bool isDiscovered = std::find(discovered.begin(), discovered.end(), neighbor) != discovered.end();
+                bool isDiscovered = contains(discovered, neighbor);
 
                 if (!isDiscovered || costToNeighbor < neighbor->GetG()) {
                     neighbor->SetG(costToNeighbor);

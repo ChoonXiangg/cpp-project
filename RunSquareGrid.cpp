@@ -18,8 +18,8 @@ void runSquareGrid(int width, int height) {
     std::cout << "End position (x, y): ";
     std::cin >> ex >> ey;
 
-    SquareNode* start = grid.GetNode(sx, sy);
-    SquareNode* target = grid.GetNode(ex, ey);
+    auto start = grid.GetNode(sx, sy);
+    auto target = grid.GetNode(ex, ey);
 
     int wallCount;
     std::cout << "Wall amount: ";
@@ -42,7 +42,7 @@ void runSquareGrid(int width, int height) {
         while (placed < wallCount) {
             int wx = std::rand() % width;
             int wy = std::rand() % height;
-            SquareNode* node = grid.GetNode(wx, wy);
+            auto node = grid.GetNode(wx, wy);
             if (node == start || node == target || !node->IsWalkable())
                 continue;
             grid.SetWall(wx, wy);
@@ -50,7 +50,7 @@ void runSquareGrid(int width, int height) {
         }
     }
 
-    std::vector<NodeBase*> basePath = Pathfinding::FindPath(start, target);
+    auto basePath = Pathfinding::FindPath(start, target);
 
     if (basePath.empty()) {
         std::cout << "\n";
@@ -60,10 +60,10 @@ void runSquareGrid(int width, int height) {
         return;
     }
 
-    std::vector<SquareNode*> path;
-    path.reserve(basePath.size());
-    for (NodeBase* node : basePath)
-        path.push_back(static_cast<SquareNode*>(node));
+    // Transform NodeBase* to SquareNode* using std::transform
+    std::vector<SquareNode*> path(basePath.size());
+    std::transform(basePath.begin(), basePath.end(), path.begin(),
+        [](NodeBase* node) { return static_cast<SquareNode*>(node); });
     std::reverse(path.begin(), path.end());
 
     std::cout << "\nS: Start  E: End  .: Free  X: Wall  @: Agent  *: Path\n";
@@ -76,7 +76,7 @@ void runSquareGrid(int width, int height) {
         int ch = _getch();
         (void)ch;
 
-        SquareNode* agent = path[i];
+        auto agent = path[i];
 
         if (i == 0)
             visited.push_back(start);
@@ -88,7 +88,7 @@ void runSquareGrid(int width, int height) {
     }
 
     std::cout << "\nPath: (" << start->x_ << ", " << start->y_ << ")";
-    for (SquareNode* node : path)
+    for (auto node : path)
         std::cout << ", (" << node->x_ << ", " << node->y_ << ")";
     std::cout << "\nPath length: " << path.size() << "\n";
 }
