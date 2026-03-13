@@ -129,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Display.h" />
+    <ClInclude Include="HexGrid.h" />
     <ClInclude Include="SquareGrid.h" />
     <ClInclude Include="SquareNode.h" />
     <ClInclude Include="HexNode.h" />
