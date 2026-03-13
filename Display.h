@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "Grid.h"
-#include "GridNode.h"
+#include "SquareGrid.h"
+#include "SquareNode.h"
 
 namespace Display {
     void EnableAnsiEscapes();

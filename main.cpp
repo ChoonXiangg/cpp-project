@@ -4,8 +4,8 @@
 #include <conio.h>
 #include <cstdlib>
 #include <ctime>
-#include "Grid.h"
-#include "GridNode.h"
+#include "SquareGrid.h"
+#include "SquareNode.h"
 #include "Display.h"
 #include "Pathfinding.h"
 

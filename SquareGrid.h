@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <memory>
-#include "GridNode.h"
+#include "SquareNode.h"
 
 class Grid {
 public:

@@ -1,4 +1,4 @@
-#include "Grid.h"
+#include "SquareGrid.h"
 
 Grid::Grid(int width, int height) : width_(width), height_(height) {
     nodes_.reserve(width * height);
