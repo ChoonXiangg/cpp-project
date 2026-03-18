@@ -14,16 +14,16 @@ void runHexGrid(int width, int height, Heuristic heuristic) {
     HexGrid grid(width, height, heuristic);
 
     int sx, sy, ex, ey;
-    Input::ReadPosition("Start position (x y): ", sx, sy, width, height);
-    Input::ReadPosition("End position (x y): ", ex, ey, width, height);
+    Input::ReadPosition("Start position (x, y): ", sx, sy, width, height);
+    Input::ReadPosition("End position (x, y): ", ex, ey, width, height);
 
     auto start = grid.GetNode(sx, sy);
     auto target = grid.GetNode(ex, ey);
 
     int maxWalls = width * height - 2;
-    auto wallCount = Input::ReadInt("Number of walls: ",
+    auto wallCount = Input::ReadInt("Number of wall: ",
         [maxWalls](int v) { return v >= 0 && v <= maxWalls; },
-        "Must be between 0 and " + std::to_string(maxWalls) + ".");
+        "Number of wall must be between 0 and " + std::to_string(maxWalls) + ".");
 
     if (wallCount > 0) {
         auto choice = Input::ReadInt("Wall placement (1: Manual, 2: Random): ",
@@ -34,13 +34,13 @@ void runHexGrid(int width, int height, Heuristic heuristic) {
             for (int i = 0; i < wallCount; i++) {
                 int wx, wy;
                 while (true) {
-                    Input::ReadPosition("Wall " + std::to_string(i + 1) + " position (x y): ",
+                    Input::ReadPosition("Wall " + std::to_string(i + 1) + " position (x, y): ",
                         wx, wy, width, height);
                     auto node = grid.GetNode(wx, wy);
                     if (node == start || node == target)
-                        std::cout << "Cannot place a wall on start or end.\n";
+                        std::cout << "Wall must not be on start or end.\n";
                     else if (!node->IsWalkable())
-                        std::cout << "Wall already exists at (" << wx << ", " << wy << ").\n";
+                        std::cout << "Wall already exists.\n";
                     else
                         break;
                 }
@@ -61,6 +61,54 @@ void runHexGrid(int width, int height, Heuristic heuristic) {
         }
     }
 
+    // Weighted terrain
+    auto weightCount = Input::ReadInt("Number of terrain: ",
+        [](int v) { return v >= 0; },
+        "Number of terrain must be greater than or equal to 0.");
+
+    if (weightCount > 0) {
+        auto choice = Input::ReadInt("Terrain placement (1: Manual, 2: Random): ",
+            [](int v) { return v == 1 || v == 2; },
+            "Please enter 1 or 2.");
+
+        if (choice == 1) {
+            for (int i = 0; i < weightCount; i++) {
+                int wx, wy;
+                while (true) {
+                    Input::ReadPosition("Terrain " + std::to_string(i + 1) + " position (x, y): ",
+                        wx, wy, width, height);
+                    auto node = grid.GetNode(wx, wy);
+                    if (node == start || node == target)
+                        std::cout << "Terrain must not be on start or end.\n";
+                    else if (!node->IsWalkable())
+                        std::cout << "Terrain must not be on a wall.\n";
+                    else if (node->GetWeight() > 1.0)
+                        std::cout << "Terrain already exists.\n";
+                    else
+                        break;
+                }
+                auto weight = Input::ReadInt("Weight (2-9): ",
+                    [](int v) { return v >= 2 && v <= 9; },
+                    "Weight must be between 2 and 9.");
+                grid.SetWeight(wx, wy, weight);
+            }
+        }
+        else {
+            int placed = 0;
+            while (placed < weightCount) {
+                int wx = std::rand() % width;
+                int wy = std::rand() % height;
+                auto node = grid.GetNode(wx, wy);
+                if (node == start || node == target
+                    || !node->IsWalkable() || node->GetWeight() > 1.0)
+                    continue;
+                int weight = 2 + std::rand() % 8; // random weight 2-9
+                grid.SetWeight(wx, wy, weight);
+                placed++;
+            }
+        }
+    }
+
     auto basePath = Pathfinding::FindPath(start, target);
 
     if (basePath.empty()) {
@@ -76,7 +124,7 @@ void runHexGrid(int width, int height, Heuristic heuristic) {
         [](NodeBase* node) { return static_cast<HexNode*>(node); });
     std::reverse(path.begin(), path.end());
 
-    std::cout << "\nS: Start  E: End  .: Free  X: Wall  @: Agent  *: Path\n";
+    std::cout << "\nS: Start  E: End  .: Free  X: Wall  @: Agent  *: Path  2-9: Weight\n";
     std::cout << "Press any key to take a step\n\n";
 
     std::vector<HexNode*> visited;

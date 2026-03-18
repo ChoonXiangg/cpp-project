@@ -17,6 +17,10 @@ void HexGrid::SetWall(int x, int y) {
     GetNode(x, y)->SetWalkable(false);
 }
 
+void HexGrid::SetWeight(int x, int y, double weight) {
+    GetNode(x, y)->SetWeight(weight);
+}
+
 void HexGrid::SetupNeighbors() {
     int evenDx[] = { -1, 1,  0, -1,  0, -1 };
     int evenDy[] = { 0, 0, -1, -1,  1,  1 };

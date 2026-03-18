@@ -13,6 +13,7 @@ public:
     int GetHeight() const { return height_; }
     HexNode* GetNode(int x, int y) const { return nodes_[y * width_ + x].get(); }
     void SetWall(int x, int y);
+    void SetWeight(int x, int y, double weight);
 
 private:
     int width_;

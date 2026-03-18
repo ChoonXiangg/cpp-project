@@ -54,7 +54,9 @@ public:
                 if (!neighbor->IsWalkable() || contains(closed, neighbor))
                     continue;
 
-                double costToNeighbor = current->GetG() + current->GetDistance(neighbor);
+                // Cost = distance * neighbor's terrain weight
+                double costToNeighbor = current->GetG()
+                    + current->GetDistance(neighbor) * neighbor->GetWeight();
                 bool isDiscovered = contains(discovered, neighbor);
 
                 if (!isDiscovered || costToNeighbor < neighbor->GetG()) {
@@ -66,7 +68,6 @@ public:
                         discovered.push_back(neighbor);
                     }
 
-                    // Push with updated priority (old entry becomes stale)
                     openSet.push(neighbor);
                 }
             }

@@ -17,6 +17,10 @@ void SquareGrid::SetWall(int x, int y) {
     GetNode(x, y)->SetWalkable(false);
 }
 
+void SquareGrid::SetWeight(int x, int y, double weight) {
+    GetNode(x, y)->SetWeight(weight);
+}
+
 void SquareGrid::SetupNeighbors() {
     int dx[] = { 0, 0, -1, 1 };
     int dy[] = { -1, 1, 0, 0 };
